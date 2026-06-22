@@ -1,29 +1,12 @@
-import 'package:flutter/material.dart';
+// Modelo de dados que representa um usuário da aplicação
+
 import 'package:nubankt02/models/carteira.dart';
 
+// Modelo com informações pessoais e financeiras do usuário.
 class Usuario {
+  String nome;
+  int idade;
+  Carteira carteira;
 
-  String _nome;
-  int _idade;
-  Carteira _carteira;
-
-  Usuario(this._nome, this._idade, this._carteira);
-
-  Carteira get carteira => _carteira;
-
-  set carteira(Carteira value) {
-    _carteira = value;
-  }
-
-  int get idade => _idade;
-
-  set idade(int value) {
-    _idade = value;
-  }
-
-  String get nome => _nome;
-
-  set nome(String value) {
-    _nome = value;
-  }
+  Usuario(this.nome, this.idade, this.carteira);
 }

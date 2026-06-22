@@ -1,7 +1,19 @@
+// Página Principal (Tela Secundária)
+
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:nubankt02/models/carteira.dart';
 import 'package:nubankt02/models/usuario.dart';
+import 'package:nubankt02/theme/app_tokens.dart';
+import 'package:nubankt02/widgets/cartao_credito_section.dart';
+import 'package:nubankt02/widgets/conta_section.dart';
+import 'package:nubankt02/widgets/emprestimo_section.dart';
+import 'package:nubankt02/widgets/header_section.dart';
+import 'package:nubankt02/widgets/info_cards_row.dart';
+import 'package:nubankt02/widgets/investimentos_section.dart';
+import 'package:nubankt02/widgets/meus_cartoes_card.dart';
+import 'package:nubankt02/widgets/section_divider.dart';
+import 'package:nubankt02/widgets/seguros_section.dart';
+import 'package:nubankt02/widgets/shopping_section.dart';
 
 class Secundaria extends StatefulWidget {
   const Secundaria({super.key});
@@ -11,106 +23,61 @@ class Secundaria extends StatefulWidget {
 }
 
 class _SecundariaState extends State<Secundaria> {
-  Carteira _carteira = Carteira(1356.98, 250, 3455.55, 25000);
-  late Usuario _usuario = Usuario('Laysa', 30, _carteira);
-  
+  final Carteira _carteira = Carteira(1356.98, 250, 3455.55, 25000);
+
+  late final Usuario _usuario = Usuario('Laysa', 30, _carteira);
+
+  String _currency(double value) {
+    final String fixed = value.toStringAsFixed(2).replaceAll('.', ',');
+    return 'R\$ $fixed';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 110,
-        backgroundColor: Color(0xFF830AD1),
-        title: Container(
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: .spaceBetween,
-                children: [
-                Container(
-                  child: Icon(Icons.person_outlined, color: Colors.white,),
-                  height: 42,
-                  width: 42,
-                  decoration: BoxDecoration(
-                      color: Color(0xFF9B03FE),
-                      shape: .circle
-                  ),
-                ),
-                Container(
-                  width: 100,
-                  child: Row(
-                      mainAxisAlignment: .spaceBetween,
-                      children: [
-                        Image.asset('assets/images/iconevisualizacao.png'),
-                        Column(
-                          children: [Image.asset('assets/images/iconeajuda.png'), SizedBox(height: 5,)],
-                        ),
-                        Image.asset('assets/images/iconeconvite.png'),
-                      ]
-                  ),
-                )
-              ],),
-              SizedBox(height: 10),
-              Row(
-                children: [Text('Olá, ${_usuario.nome}', style: GoogleFonts.poppins(
-                  color: Colors.white,
-                  fontWeight: .w600,
-                ),)],
-              )
-            ],
-          ),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-            padding: EdgeInsetsGeometry.fromLTRB(16, 16, 16,0),
-            child: Column(
-              children: [
-                Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: .spaceBetween,
-                      children: [
-                      Text('Conta', style: GoogleFonts.poppins(
-                        color: Color(0xFF060606),
-                        fontSize: 16,
-                        fontWeight: .w500
-                      ),),
-                      Icon(Icons.arrow_forward_ios, color: Color(0xFF666666),)
-                    ],),
-                    Row(children: [
-                      Text('R\$ ${_usuario.carteira.saldo}', style: GoogleFonts.poppins(
-                          color: Color(0xFF060606),
-                          fontSize: 16,
-                          fontWeight: .bold
-                      ),)
-                    ],),
-                    SizedBox(height: 24,),
-                    SingleChildScrollView(
-                      scrollDirection: .vertical,
-                      child: Row(
-                        children: [
-                          GestureDetector(
-                            child: Column(
-                              children: [
-                                Stack(
-                                  alignment: .center,
-                                  children: [
-                                    Image.asset("assets/images/Ellipse.png"),
-                                    Image.asset("assets/images/icone.png")
-                                  ],
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    )
+      backgroundColor: AppColors.surface,
+      body: Column(
+        children: <Widget>[
+          HeaderSection(nomeUsuario: _usuario.nome),
+          Expanded(
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 18, 20, 28),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    ContaSection(saldo: _currency(_usuario.carteira.saldo)),
+                    const SizedBox(height: 20),
+                    const MeusCartoesCard(),
+                    const SizedBox(height: 16),
+                    const InfoCardsRow(),
+                    const SectionDivider(),
+                    const SizedBox(height: 22),
+                    CartaoCreditoSection(
+                      fatura: _currency(_usuario.carteira.fatura),
+                      limite: _currency(_usuario.carteira.limite),
+                    ),
+                    const SectionDivider(),
+                    const SizedBox(height: 22),
+                    EmprestimoSection(
+                      emprestimo: _currency(_usuario.carteira.emprestimo),
+                    ),
+                    const SectionDivider(),
+                    const SizedBox(height: 22),
+                    const InvestimentosSection(),
+                    const SectionDivider(),
+                    const SizedBox(height: 22),
+                    const SegurosSection(),
+                    const SizedBox(height: 18),
+                    const ShoppingSection(),
                   ],
-                )
-              ],
+                ),
+              ),
             ),
-        )
-      )
+          ),
+        ],
+      ),
     );
   }
 }
